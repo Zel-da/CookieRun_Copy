@@ -50,7 +50,7 @@ public class PlayerController : MonoBehaviour
             this.playerRigidbody.AddForce(new Vector2(0, this.jumpForce));
             if (jumpCount == 2)
             {
-                this.animator.SetTrigger("Jump2");
+                this.animator.SetTrigger("Double Jump");
             }
         }
     }
@@ -64,13 +64,30 @@ public class PlayerController : MonoBehaviour
     {
         this.animator.SetTrigger("Run");
     }
-    public void Die()
+    public void DieHit()
     {
         if (isRun)
         {
             //사망처리
             //애니메이터의 Die 트리거 마라메터 설정
-            this.animator.SetTrigger("Die");
+            this.animator.SetTrigger("Die_Hit");
+            //속도를 0으로 변경
+            this.playerRigidbody.velocity = Vector2.zero;
+            //사망 상태 변경
+            this.isDie = true;
+
+            //게임 매니저의 게임오버 처리 실행
+            GameManager.instance.OnPlayerDead();
+        }
+
+    }
+    public void DieHeart()
+    {
+        if (isRun)
+        {
+            //사망처리
+            //애니메이터의 Die 트리거 마라메터 설정
+            this.animator.SetTrigger("Die_Heart");
             //속도를 0으로 변경
             this.playerRigidbody.velocity = Vector2.zero;
             //사망 상태 변경
@@ -87,7 +104,7 @@ public class PlayerController : MonoBehaviour
         if (collision.tag == "Dead" && !this.isDie)
         {
             //충돌한 상대방의 태그가 Dead고 아직 죽지 않았다면
-            this.Die();
+            this.DieHit();
         }
     }
 
